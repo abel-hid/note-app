@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+
+  my-app:
+    build:
+      context: ./my-app
+      dockerfile: dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./my-app:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+  
+volumes:
+  backend-data:
+    driver: local

@@ -1,0 +1,21 @@
+
+
+FROM python:3.9
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+RUN rm -rf myproject/__pycache__
+RUN rm -rf backend/__pycache__
+RUN rm -rf myproject/migrations
+RUN python manage.py makemigrations myproject
+RUN python manage.py migrate
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
